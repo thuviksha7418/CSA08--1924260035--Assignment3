@@ -1,0 +1,40 @@
+import random
+
+def moving_average_naive(values, window=7):
+    return [
+        sum(values[i:i+window]) / window
+        for i in range(len(values)-window+1)
+    ] if len(values) >= window else []
+
+
+def moving_average_running(values, window=7):
+    if len(values) < window:
+        return []
+
+    current = sum(values[:window])
+    result = [current / window]
+
+    for i in range(window, len(values)):
+        current += values[i] - values[i-window]
+        result.append(current / window)
+
+    return result
+
+
+rainfall = [random.randint(0, 30) for _ in range(365)]
+
+weekly = [sum(rainfall[i:i+7]) for i in range(0, 365, 7)]
+
+wettest = max(range(len(weekly)), key=lambda i: weekly[i])
+driest = min(range(len(weekly)), key=lambda i: weekly[i])
+
+dry_days = [
+    i+1 for i, value in enumerate(rainfall)
+    if value == 0
+]
+
+print("Weekly totals:", weekly)
+print("Wettest week:", wettest+1, weekly[wettest])
+print("Driest week:", driest+1, weekly[driest])
+print("Moving average:", moving_average_running(rainfall))
+print("Dry days:", dry_days)
