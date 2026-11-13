@@ -1,0 +1,50 @@
+import sys
+
+readings = [1, 2.5, 9, -60, 4, 55, 7]
+
+# Using normal loop
+celsius = []
+
+for value in readings:
+    if -50 <= value <= 50:
+        celsius.append(value)
+
+print("Valid Celsius readings:", celsius)
+
+# Using list comprehension
+valid = [v for v in readings if -50 <= v <= 50]
+
+print("Valid readings:", valid)
+
+# Convert Celsius to Fahrenheit
+fahrenheit = [v * 9/5 + 32 for v in valid]
+
+print("Fahrenheit readings:", fahrenheit)
+
+# Find alarm readings
+alarms = [
+    (i, v) for i, v in enumerate(readings)
+    if -50 <= v <= 50 and not 2 <= v <= 8
+]
+
+print("Alarm readings:", alarms)
+
+# Dictionary comprehension
+reading_dict = {
+    i: v for i, v in enumerate(readings)
+    if -50 <= v <= 50
+}
+
+print("Reading dictionary:", reading_dict)
+
+# Set comprehension
+reading_set = {
+    v for v in readings if -50 <= v <= 50
+}
+
+print("Reading set:", reading_set)
+
+# Generator expression
+gen = (v for v in readings if -50 <= v <= 50)
+
+print("Generator values:", list(gen))
