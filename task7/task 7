@@ -1,0 +1,101 @@
+import time
+
+def normalise_phone(phone):
+    digits = "".join(ch for ch in phone if ch.isdigit())
+
+    if len(digits) == 12 and digits.startswith("91"):
+        digits = digits[2:]
+
+    return digits
+
+
+def merge_contacts(sources):
+    merged = {}
+
+    for source in sources:
+        for contact in source:
+
+            phone = normalise_phone(contact.get("phone", ""))
+
+            if not phone:
+                continue
+
+            if phone not in merged:
+                merged[phone] = {
+                    "names": set(),
+                    "numbers": set(),
+                    "emails": set()
+                }
+
+            if contact.get("name"):
+                merged[phone]["names"].add(contact["name"])
+
+            if contact.get("phone"):
+                merged[phone]["numbers"].add(contact["phone"])
+
+            if contact.get("email"):
+                merged[phone]["emails"].add(
+                    contact["email"].lower()
+                )
+
+    return merged
+
+
+phone1 = [
+    {
+        "name": "Dr. Ravi",
+        "phone": "+91 98400 12345",
+        "email": "ravi@example.com"
+    },
+    {
+        "name": "Anu",
+        "phone": "9000011111",
+        "email": ""
+    }
+]
+
+phone2 = [
+    {
+        "name": "Ravi Kumar",
+        "phone": "9840012345",
+        "email": "rk@example.com"
+    },
+    {
+        "name": "Anu",
+        "phone": "90000-11111",
+        "email": "anu@example.com"
+    }
+]
+
+result = merge_contacts([phone1, phone2])
+
+print("Merged Contacts:")
+
+for phone, details in result.items():
+    print("\nPhone:", phone)
+    print("Names:", details["names"])
+    print("Numbers:", details["numbers"])
+    print("Emails:", details["emails"])
+
+
+# Performance testing
+
+for n in (1000, 100000):
+
+    contacts = [
+        {
+            "name": f"Person {i}",
+            "phone": str(9000000000 + i)
+        }
+        for i in range(n)
+    ]
+
+    start = time.perf_counter()
+
+    merged = merge_contacts([contacts])
+
+    end = time.perf_counter()
+
+    print("\nNumber of contacts:", n)
+    print("Execution time:", round(end - start, 6), "seconds")
+    print("Merged contacts:", len(merged))
