@@ -1,0 +1,46 @@
+calls = [
+    "seeds not received seeds delayed",
+    "fertiliser price high",
+    "seeds price high subsidy not received"
+]
+
+STOP = {"not", "high"}
+
+
+def frequencies(texts, stop):
+    counts = {}
+
+    for text in texts:
+        for word in text.lower().replace(",", " ").replace(".", " ").split():
+            if word not in stop:
+                counts[word] = counts.get(word, 0) + 1
+
+    return counts
+
+
+def top(counts, k):
+    return sorted(
+        counts.items(),
+        key=lambda item: (-item[1], item[0])
+    )[:k]
+
+
+print(top(frequencies(calls, STOP), 3))
+
+
+complaints = [
+    {"district": "Chennai", "crop": "rice", "text": "seed delay"},
+    {"district": "Madurai", "crop": "cotton", "text": "price issue"},
+    {"district": "Chennai", "crop": "rice", "text": "water shortage"}
+]
+
+by_district, by_crop = {}, {}
+
+for item in complaints:
+    by_district.setdefault(item["district"], []).append(item["text"])
+    by_crop.setdefault(item["crop"], []).append(item["text"])
+
+print({district: len(items) for district, items in by_district.items()})
+print(by_crop)
+
+print(by_district.keys(), by_district.values(), by_district.items())
